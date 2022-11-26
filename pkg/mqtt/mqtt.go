@@ -2,14 +2,25 @@ package mqtt
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"strconv"
 
+	"github.com/Ivanf1/esp32-mqtt-ble-persistence-service/pkg/db"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
 var mqttMessagePublishHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
 	fmt.Printf("TOPIC: %s\n", msg.Topic())
 	fmt.Printf("MSG: %s\n", msg.Payload())
+
+	i, err := strconv.Atoi(string(msg.Payload()))
+	if err != nil {
+		log.Printf("could not converto mqtt message payload to int")
+		return
+	}
+
+	go db.Insert(i)
 }
 
 var client mqtt.Client

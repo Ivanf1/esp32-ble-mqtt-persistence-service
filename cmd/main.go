@@ -6,8 +6,11 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/Ivanf1/esp32-mqtt-ble-persistence-service/pkg/db"
 	"github.com/Ivanf1/esp32-mqtt-ble-persistence-service/pkg/mqtt"
 	"github.com/joho/godotenv"
+
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -21,6 +24,8 @@ func main() {
 
 	mqtt.ClientSetup()
 	mqtt.SubscribeAndListen()
+
+	db.Connect()
 
 	<-keepAlive
 }
